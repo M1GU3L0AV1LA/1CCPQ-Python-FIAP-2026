@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        let dados = [];
+        dados.push('A'); //posição 0
+        dados.push('B'); //posição 1
+        dados.push('C'); //posição 2
+
+        for (i = 0; i < dados.length; i++) {
+            alert("Elemento" + (i+1) + ": " + dados[i]);
+        }
+
+        let removido = dados.shift();
+        alert ("Removido: " + removido);
+
+        for (i = 0; i < dados.length; i++) {
+            alert("Elemento" + (i+1) + ": " + dados[i]);
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
