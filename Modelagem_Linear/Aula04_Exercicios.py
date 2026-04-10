@@ -1,4 +1,4 @@
-'''
+import  math
 # Exemplo 3
 tem_cafe = False
 
@@ -7,14 +7,12 @@ if not tem_cafe:
 
 else:
     print("Print já temos cáfe o suficiente")
-'''
-import math
 
-'''
+
 # Exemplo 4
 for i in range(5):
     print("Número:", i)
-'''
+
 '''
 # Exemplo 5
 n = 0
