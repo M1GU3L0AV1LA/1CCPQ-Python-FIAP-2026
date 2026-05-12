@@ -1,12 +1,13 @@
-''' Dado um conjunto de nomes de quatro pessoas, escreva um algoritmo que imprima todas as possíveis
-duplas que podem ser formadas.
-Primeiro, crie um vetor e coloque quatro nomes nele.
-A seguir, exiba as possíveis duplas. '''
+'''Escreva um algoritmo que recebe um número inteiro n > 0, cria um vetor de números reais com n
+posições e preenche o vetor com n números aleatórios reais.
+▪ Depois de preenchido o vetor, imprima na tela todos os números gerados'''
 
-nomes = ['Ana', 'Maria', 'Enzo', 'Leo']
+import random
 
-for i in range(len(nomes)):
-    for j in range(i+1, len(nomes)):
-        print(nomes[i], nomes[j])
+n = int(input("Digite quantos números seu vetor irá receber: "))
+vetor = []
 
+for i in range(n):
+    vetor.append(random.randint(0,99))
 
+print(f"Seu vetor ficou assim = {vetor}.")
