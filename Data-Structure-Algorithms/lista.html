@@ -43,6 +43,22 @@
             document.getElementById("saida").innerHTML = "Elemento adicionado";
                 
         }
+
+        function mostrar() {
+            let resultado = "";
+            let atual = inicio;
+
+            while (atual !== -1) {
+                resultado += valores[atual] + " → ";
+                atual = proximo[atual];
+            }
+             if (inicio === -1) {
+                resultado = "Lista vazia";
+            } else {
+              resultado += "null";  
+            }
+            document.getElementById("saída").innerHTML = resultado;
+        }
     </script>
 </body>
 </html>
