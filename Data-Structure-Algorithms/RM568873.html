@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Playlist com Lista Encadeada</title>
+  <style>
+    body{
+        font-family: Arial;
+        margin: 30px;
+    }
+    button {
+        width: 150px;
+    }
+    input {
+        width: 450px;
+    }
+    input, button{
+        margin: 5px;
+        padding: 8px;
+    }
+    #saida {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+    <h1>Playlist com Lista Encadeada</h1>
+
+    <input type="text" id="nome" placeholder="O que você quer escutar?">
+    <br>
+    <button onclick="adicionarFim()">Adicionar no Fim</button>
+    <button onclick="adicionarInicio()">Adicionar Início</button>
+    <button onclick="removerPeloNome()">Remover Música</button>
+    <br>
+    <button onclick="proximaMusica()">Próxima Música</button>
+    <button onclick="contar()">Contar Músicas</button>
+    <button onclick="mostrar()">Mostrar Lista</button>
+    <br>
+    <button onclick="embaralhar()">Embaralhar</button>
+    <button onclick="limparPlaylist()">Limpar Playlist</button>
+
+    <div id="saida"></div>
+    <div id="status"></div>
+
+    <script>
+    // "lista encadeada" simulada
+    let valores = [];
+    let proximo = [];
+
+    let inicio = -1;
+    let ultimo = -1;
+    let musicaAtual = -1;
+
+    // ── 1. ADICIONAR NO FIM (seu código, sem alteração) ──────────────────────
+    function adicionarFim() {
+        let nome = document.getElementById("nome").value;
+        if (nome === "") {
+            alert("Adicione o nome da música");
+            return;
+        }
+        let novoIndice = valores.length;
+        valores.push(nome);
+        proximo.push(-1);
+
+        if (inicio === -1) {
+            inicio = novoIndice;
+            ultimo = novoIndice;
+        } else {
+            proximo[ultimo] = novoIndice;
+            ultimo = novoIndice;
+        }
+
+        document.getElementById("nome").value = "";
+        mostrar();
+    }
+
+    // ── 2. ENVIAR MÚSICA PARA O INÍCIO (substitui adicionarInicio) ───────────
+    function adicionarInicio() {
+    let nome = document.getElementById("nome").value;
+    if (nome === "") { alert("Digite o nome da música."); return; }
+
+    let novoIndice = valores.length;
+    valores.push(nome);
+    proximo.push(inicio);
+    inicio = novoIndice;
+
+    if (ultimo === -1) {
+        ultimo = novoIndice;
+    }
+
+    document.getElementById("nome").value = "";
+    document.getElementById("status").textContent = '"' + nome + '" adicionada no início.';
+    mostrar();
+}
+
+    // ── 3. REMOVER PELO NOME (substitui removerInicio) ───────────────────────
+    function removerPeloNome() {
+        let nome = document.getElementById("nome").value;
+        if (nome === "") { alert("Digite o nome da música."); return; }
+        if (inicio === -1) { alert("Playlist vazia."); return; }
+
+        // Caso: remoção do início
+        if (valores[inicio] === nome) {
+            if (musicaAtual === inicio) musicaAtual = -1;
+            inicio = proximo[inicio];
+            if (inicio === -1) ultimo = -1;
+            document.getElementById("nome").value = "";
+            document.getElementById("status").textContent = '"' + nome + '" removida.';
+            mostrar();
+            return;
+        }
+
+        let anterior = inicio;
+        let atual = proximo[inicio];
+        let encontrou = false;
+
+        while (atual !== -1) {
+            if (valores[atual] === nome) { encontrou = true; break; }
+            anterior = atual;
+            atual = proximo[atual];
+        }
+
+        if (!encontrou) {
+            document.getElementById("status").textContent = '"' + nome + '" não encontrada.';
+            document.getElementById("nome").value = "";
+            return;
+        }
+
+        proximo[anterior] = proximo[atual];
+        if (ultimo === atual) ultimo = anterior;
+        if (musicaAtual === atual) musicaAtual = -1;
+
+        document.getElementById("nome").value = "";
+        document.getElementById("status").textContent = '"' + nome + '" removida.';
+        mostrar();
+    }
+
+    // ── 4. PRÓXIMA MÚSICA ────────────────────────────────────────────────────
+    function proximaMusica() {
+        if (inicio === -1) { alert("Playlist vazia."); return; }
+
+        if (musicaAtual === -1) {
+            musicaAtual = inicio;
+        } else {
+            let prox = proximo[musicaAtual];
+            musicaAtual = (prox === -1) ? inicio : prox;
+        }
+
+        document.getElementById("status").textContent = "Tocando: " + valores[musicaAtual];
+        mostrar();
+    }
+
+    // ── 5. CONTAR (seu código, sem alteração) ────────────────────────────────
+    function contar() {
+        let contador = 0;
+        let atual = inicio;
+        while (atual !== -1) {
+            contador++;
+            atual = proximo[atual];
+        }
+        document.getElementById("status").textContent = "Total de músicas: " + contador;
+    }
+
+    // ── 6. LIMPAR PLAYLIST ───────────────────────────────────────────────────
+    function limparPlaylist() {
+        valores = [];
+        proximo = [];
+        inicio = -1;
+        ultimo = -1;
+        musicaAtual = -1;
+        document.getElementById("status").textContent = "Playlist limpa.";
+        mostrar();
+    }
+
+    // ── 7. MOSTRAR (seu código, sem alteração) ───────────────────────────────
+    function mostrar() {
+        let resultado = "";
+        let atual = inicio;
+
+        while (atual !== -1) {
+            let nome = valores[atual];
+            if (atual === musicaAtual) nome = "♪ " + nome;
+            resultado += nome + " → ";
+            atual = proximo[atual];
+        }
+        if (inicio === -1) {
+            resultado = "Lista vazia";
+        } else {
+            resultado += "null";
+        }
+
+        document.getElementById("saida").innerHTML = resultado;
+    }
+
+    // ── EXTRA: EMBARALHAR (Fisher-Yates no encadeamento) ─────────────────────
+    function embaralhar() {
+        if (inicio === -1) { alert("Playlist vazia."); return; }
+
+        // Coletar índices na ordem atual
+        let indices = [];
+        let atual = inicio;
+        while (atual !== -1) {
+            indices.push(atual);
+            atual = proximo[atual];
+        }
+
+        // Fisher-Yates manual (sem sort)
+        let n = indices.length;
+        for (let i = n - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let tmp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = tmp;
+        }
+
+        // Reconstruir encadeamento
+        for (let k = 0; k < indices.length - 1; k++) {
+            proximo[indices[k]] = indices[k + 1];
+        }
+        proximo[indices[indices.length - 1]] = -1;
+
+        inicio = indices[0];
+        ultimo = indices[indices.length - 1];
+        musicaAtual = -1;
+
+        document.getElementById("status").textContent = "Playlist embaralhada!";
+        mostrar();
+    }
+
+    mostrar();
+    </script>
+
+</body>
+</html>
