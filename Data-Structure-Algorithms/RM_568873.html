@@ -46,37 +46,34 @@
     <div id="status"></div>
 
     <script>
-    
     let valores = [];
-    let proximo = [];
+let proximo = [];
 
-    let inicio = -1;
-    let ultimo = -1;
-    let musicaAtual = -1;
+let inicio = -1;
+let ultimo = -1;
+let musicaAtual = -1;
 
-    function adicionarFim() {
-        let nome = document.getElementById("nome").value;
-        if (nome === "") {
-            alert("Adicione o nome da música");
-            return;
-        }
-        let novoIndice = valores.length;
-        valores.push(nome);
-        proximo.push(-1);
+function adicionarFim() {
+    let nome = document.getElementById("nome").value;
+    if (nome === "") { alert("Adicione o nome da música"); return; }
 
-        if (inicio === -1) {
-            inicio = novoIndice;
-            ultimo = novoIndice;
-        } else {
-            proximo[ultimo] = novoIndice;
-            ultimo = novoIndice;
-        }
+    let novoIndice = valores.length;
+    valores.push(nome);
+    proximo.push(-1);
 
-        document.getElementById("nome").value = "";
-        mostrar();
+    if (inicio === -1) {
+        inicio = novoIndice;
+        ultimo = novoIndice;
+    } else {
+        proximo[ultimo] = novoIndice;
+        ultimo = novoIndice;
     }
 
-    function adicionarInicio() {
+    document.getElementById("nome").value = "";
+    document.getElementById("status").textContent = '"' + nome + '" adicionada no fim.';
+}
+
+function adicionarInicio() {
     let nome = document.getElementById("nome").value;
     if (nome === "") { alert("Digite o nome da música."); return; }
 
@@ -91,137 +88,128 @@
 
     document.getElementById("nome").value = "";
     document.getElementById("status").textContent = '"' + nome + '" adicionada no início.';
-    mostrar();
 }
 
-    function removerPeloNome() {
-        let nome = document.getElementById("nome").value;
-        if (nome === "") { alert("Digite o nome da música."); return; }
-        if (inicio === -1) { alert("Playlist vazia."); return; }
+function removerPeloNome() {
+    let nome = document.getElementById("nome").value;
+    if (nome === "") { alert("Digite o nome da música."); return; }
+    if (inicio === -1) { alert("Playlist vazia."); return; }
 
-        if (valores[inicio] === nome) {
-            if (musicaAtual === inicio) musicaAtual = -1;
-            inicio = proximo[inicio];
-            if (inicio === -1) ultimo = -1;
-            document.getElementById("nome").value = "";
-            document.getElementById("status").textContent = '"' + nome + '" removida.';
-            mostrar();
-            return;
-        }
-
-        let anterior = inicio;
-        let atual = proximo[inicio];
-        let encontrou = false;
-
-        while (atual !== -1) {
-            if (valores[atual] === nome) { encontrou = true; break; }
-            anterior = atual;
-            atual = proximo[atual];
-        }
-
-        if (!encontrou) {
-            document.getElementById("status").textContent = '"' + nome + '" não encontrada.';
-            document.getElementById("nome").value = "";
-            return;
-        }
-
-        proximo[anterior] = proximo[atual];
-        if (ultimo === atual) ultimo = anterior;
-        if (musicaAtual === atual) musicaAtual = -1;
-
+    if (valores[inicio] === nome) {
+        if (musicaAtual === inicio) musicaAtual = -1;
+        inicio = proximo[inicio];
+        if (inicio === -1) ultimo = -1;
         document.getElementById("nome").value = "";
         document.getElementById("status").textContent = '"' + nome + '" removida.';
-        mostrar();
+        return;
     }
 
-    function proximaMusica() {
-        if (inicio === -1) { alert("Playlist vazia."); return; }
+    let anterior = inicio;
+    let atual = proximo[inicio];
+    let encontrou = false;
 
-        if (musicaAtual === -1) {
-            musicaAtual = inicio;
-        } else {
-            let prox = proximo[musicaAtual];
-            musicaAtual = (prox === -1) ? inicio : prox;
-        }
-
-        document.getElementById("status").textContent = "Tocando: " + valores[musicaAtual];
-        mostrar();
+    while (atual !== -1) {
+        if (valores[atual] === nome) { encontrou = true; break; }
+        anterior = atual;
+        atual = proximo[atual];
     }
 
-    function contar() {
-        let contador = 0;
-        let atual = inicio;
-        while (atual !== -1) {
-            contador++;
-            atual = proximo[atual];
-        }
-        document.getElementById("status").textContent = "Total de músicas: " + contador;
+    if (!encontrou) {
+        document.getElementById("status").textContent = '"' + nome + '" não encontrada.';
+        document.getElementById("nome").value = "";
+        return;
     }
 
-    function limparPlaylist() {
-        valores = [];
-        proximo = [];
-        inicio = -1;
-        ultimo = -1;
-        musicaAtual = -1;
-        document.getElementById("status").textContent = "Playlist limpa.";
-        mostrar();
+    proximo[anterior] = proximo[atual];
+    if (ultimo === atual) ultimo = anterior;
+    if (musicaAtual === atual) musicaAtual = -1;
+
+    document.getElementById("nome").value = "";
+    document.getElementById("status").textContent = '"' + nome + '" removida.';
+}
+
+function proximaMusica() {
+    if (inicio === -1) { alert("Playlist vazia."); return; }
+
+    if (musicaAtual === -1) {
+        musicaAtual = inicio;
+    } else {
+        let prox = proximo[musicaAtual];
+        musicaAtual = (prox === -1) ? inicio : prox;
     }
 
-    function mostrar() {
-        let resultado = "";
-        let atual = inicio;
+    document.getElementById("status").textContent = "Tocando: " + valores[musicaAtual];
+}
 
-        while (atual !== -1) {
-            let nome = valores[atual];
-            if (atual === musicaAtual) nome = "♪ " + nome;
-            resultado += nome + " → ";
-            atual = proximo[atual];
-        }
-        if (inicio === -1) {
-            resultado = "Lista vazia";
-        } else {
-            resultado += "null";
-        }
-
-        document.getElementById("saida").innerHTML = resultado;
+function contar() {
+    let contador = 0;
+    let atual = inicio;
+    while (atual !== -1) {
+        contador++;
+        atual = proximo[atual];
     }
-    
-    function embaralhar() {
-        if (inicio === -1) { alert("Playlist vazia."); return; }
+    document.getElementById("status").textContent = "Total de músicas: " + contador;
+}
 
-        
-        let indices = [];
-        let atual = inicio;
-        while (atual !== -1) {
-            indices.push(atual);
-            atual = proximo[atual];
-        }
+function limparPlaylist() {
+    valores = [];
+    proximo = [];
+    inicio = -1;
+    ultimo = -1;
+    musicaAtual = -1;
+    document.getElementById("status").textContent = "Playlist limpa.";
+    document.getElementById("saida").innerHTML = "";
+}
 
-        
-        let n = indices.length;
-        for (let i = n - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let tmp = indices[i];
-            indices[i] = indices[j];
-            indices[j] = tmp;
-        }
+function mostrar() {
+    let resultado = "";
+    let atual = inicio;
 
-        
-        for (let k = 0; k < indices.length - 1; k++) {
-            proximo[indices[k]] = indices[k + 1];
-        }
-        proximo[indices[indices.length - 1]] = -1;
-
-        inicio = indices[0];
-        ultimo = indices[indices.length - 1];
-        musicaAtual = -1;
-
-        document.getElementById("status").textContent = "Playlist embaralhada!";
-        mostrar();
+    while (atual !== -1) {
+        let nome = valores[atual];
+        if (atual === musicaAtual) nome = "♪ " + nome;
+        resultado += nome + " → ";
+        atual = proximo[atual];
+    }
+    if (inicio === -1) {
+        resultado = "Lista vazia";
+    } else {
+        resultado += "null";
     }
 
+    document.getElementById("saida").innerHTML = resultado;
+}
+
+function embaralhar() {
+    if (inicio === -1) { alert("Playlist vazia."); return; }
+
+    let indices = [];
+    let atual = inicio;
+    while (atual !== -1) {
+        indices.push(atual);
+        atual = proximo[atual];
+    }
+
+    let n = indices.length;
+    for (let i = n - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let tmp = indices[i];
+        indices[i] = indices[j];
+        indices[j] = tmp;
+    }
+
+    for (let k = 0; k < indices.length - 1; k++) {
+        proximo[indices[k]] = indices[k + 1];
+    }
+    proximo[indices[indices.length - 1]] = -1;
+
+    inicio = indices[0];
+    ultimo = indices[indices.length - 1];
+    musicaAtual = -1;
+
+    document.getElementById("status").textContent = "Playlist embaralhada!";
     mostrar();
+}
     </script>
 
 </body>
