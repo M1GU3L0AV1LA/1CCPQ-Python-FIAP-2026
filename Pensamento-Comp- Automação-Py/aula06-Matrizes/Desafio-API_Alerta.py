@@ -24,3 +24,4 @@ def eh_sucesso(codigo):
 # criar funcao para detectar 2 erros seguidos
 
 def erro_seguido(codigo):
+.
