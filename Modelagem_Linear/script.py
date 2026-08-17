@@ -3,10 +3,10 @@ import numpy as np
 from scipy.stats import norm
 
 # Erro Padrão da Média Amostral:
-# ep = 10/np.sqrt(25)
+dp = 10/np.sqrt(25)
 
 # Probabilidade:
-print(norm.cdf(95, 100, ep))
+print(norm.cdf(95, 100, dp))
 
 n= 110/50
 
