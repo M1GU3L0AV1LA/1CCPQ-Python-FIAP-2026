@@ -1,4 +1,4 @@
-'''# Gerar números inteiros pseudoaleátorios:
+# Gerar números inteiros pseudoaleátorios:
 import random
 
 print(random.sample(range(1, 11), 5))
@@ -14,7 +14,7 @@ print( [round(random.uniform(1, 10), 2) for _ in range(6)])
 import random
 
 random.seed(1)
-print( [random.randint(1, 100) for _ in range(6)])'''
+print( [random.randint(1, 100) for _ in range(6)])
 
 # Gerar sorteio de palavras
 import random
