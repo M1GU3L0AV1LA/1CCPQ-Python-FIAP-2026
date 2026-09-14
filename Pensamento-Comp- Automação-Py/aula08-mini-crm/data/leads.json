@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Miguel",
+    "email": "a@b.com",
+    "stage": "novo",
+    "created": "2026-09-14"
+  },
+  {
+    "name": "Isadora",
+    "email": "isa@gmail.com",
+    "stage": "atual",
+    "created": "2026-09-14"
+  }
+]
