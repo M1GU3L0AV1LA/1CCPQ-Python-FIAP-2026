@@ -1,22 +1,11 @@
 """
 Conversor de Representação de Dados
 Converte qualquer número inteiro para Decimal, Binário e Hexadecimal.
-
-Números negativos são representados em complemento de dois (padrão usado
-em sistemas computacionais), com quantidade de bits configurável.
 """
 
-
 def converter_numero(numero: int, bits: int = 16):
-    """
-    Retorna uma tupla (decimal, binario, hexadecimal) para o número informado.
-
-    - Números positivos: conversão direta.
-    - Números negativos: representados em complemento de dois, usando
-      o número de bits especificado (padrão: 16 bits).
-    """
-    decimal = numero
-
+    decimal = numero        #- Números positivos: conversão direta.
+                            #  - Números negativos: representados em complemento de dois (padrão: 16 bits).
     if numero < 0:
         valor_ajustado = (1 << bits) + numero  # complemento de dois
         binario = bin(valor_ajustado)[2:].zfill(bits)
