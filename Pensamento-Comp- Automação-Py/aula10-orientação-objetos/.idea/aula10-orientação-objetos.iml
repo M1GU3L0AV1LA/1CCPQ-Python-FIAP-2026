@@ -3,9 +3,8 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
-      <excludeFolder url="file://$MODULE_DIR$/Pensamento-Comp- Automação-Py/aula10-orientação-objetos/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.14 (1CCPQ-Python-FIAP-2026)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13 (aula10-orientação-objetos)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
