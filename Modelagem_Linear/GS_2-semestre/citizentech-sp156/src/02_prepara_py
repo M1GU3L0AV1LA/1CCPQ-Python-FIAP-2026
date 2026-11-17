@@ -1,0 +1,45 @@
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+
+PASTA_PROJETO = Path(__file__).resolve().parent.parent
+df = pd.read_csv(PASTA_PROJETO / "dados" / "sp156.csv",
+                 sep=",", encoding="utf-8", low_memory=False)
+print("Linhas iniciais:", len(df))
+
+# 1) Conferir o formato bruto das datas
+print("\nExemplos brutos:")
+print(df[["Data de Abertura", "Data de Finalização"]].dropna().head(8))
+
+# 2) Converter com formato explícito (mês/dia/ano)
+df["abertura"] = pd.to_datetime(df["Data de Abertura"], format="%m/%d/%Y", errors="coerce")
+df["finalizacao"] = pd.to_datetime(df["Data de Finalização"], format="%m/%d/%Y", errors="coerce")
+
+print("\nPeríodo (abertura):", df["abertura"].min(), "até", df["abertura"].max())
+print("Abertura não convertida:", df["abertura"].isna().sum())
+print("Finalização vazia:", df["Data de Finalização"].isna().sum(),
+      "| não convertida:", df["finalizacao"].isna().sum())
+
+# 3) Tempo de atendimento em dias
+df["tempo_dias"] = (df["finalizacao"] - df["abertura"]).dt.days
+print("\nTempo de atendimento (dias):")
+print(df["tempo_dias"].describe())
+print("Negativos (erro):", (df["tempo_dias"] < 0).sum())
+print("Zeros (mesmo dia):", (df["tempo_dias"] == 0).sum())
+print(df["tempo_dias"].quantile([0.5, 0.75, 0.9, 0.95, 0.99]))
+
+# 4) Status x existência de data de finalização
+print("\nStatus x tem data de finalização?")
+print(pd.crosstab(df["Status"], df["finalizacao"].notna()))
+
+# 5) Histograma
+pasta_fig = PASTA_PROJETO / "figuras"
+pasta_fig.mkdir(exist_ok=True)
+t = df["tempo_dias"].dropna()
+t = t[t >= 0]
+t.clip(upper=t.quantile(0.99)).hist(bins=40)
+plt.title("Distribuição do tempo de atendimento (SP156)")
+plt.xlabel("Dias até a finalização")
+plt.ylabel("Nº de solicitações")
+plt.savefig(pasta_fig / "hist_tempo_dias.png", dpi=150)
+plt.show()

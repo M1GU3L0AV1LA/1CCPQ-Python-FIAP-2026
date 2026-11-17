@@ -1,0 +1,33 @@
+from pathlib import Path
+import pandas as pd
+
+# Pasta do projeto = uma acima de src/
+PASTA_PROJETO = Path(__file__).resolve().parent.parent
+CAMINHO_CSV = PASTA_PROJETO / "dados" / "sp156.csv"
+
+print("Procurando em:", CAMINHO_CSV)
+print("Existe?", CAMINHO_CSV.exists())
+
+# Testa combinações comuns de separador e encoding até uma funcionar
+df = None
+for sep in (";", ","):
+    for enc in ("utf-8", "latin-1"):
+        try:
+            tentativa = pd.read_csv(CAMINHO_CSV, sep=sep, encoding=enc, low_memory=False)
+            if tentativa.shape[1] > 1:  # mais de 1 coluna = separador certo
+                df = tentativa
+                print(f"Leitura OK com sep='{sep}' e encoding='{enc}'")
+                break
+        except Exception as erro:
+            print(f"Falhou com sep='{sep}', encoding='{enc}': {type(erro).__name__}")
+    if df is not None:
+        break
+
+if df is None:
+    raise SystemExit("Não consegui ler o arquivo. Me mande as mensagens acima.")
+
+print(df.shape)
+print(df.columns.tolist())
+print(df.dtypes)
+print(df.head())
+print(df.isna().mean().sort_values(ascending=False))
